@@ -1,0 +1,41 @@
+##Prevents leaking secrets + reduces image size
+.env.dev
+.env.prod
+__pycache__/
+*.pyc
+db.sqlite3
+media/
+staticfiles/
+.git
+##
+
+# Ignore Python virtual environments
+env/
+Backend/env/
+Backend/bin/
+Backend/lib/
+Backend/lib64/
+Backend/pyvenv.cfg
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Django stuff
+*.sqlite3
+db.sqlite3
+
+# Environment variables
+.env
+*.env
+.env.*
+
+# Editor junk
+.vscode/
+.idea/
+
+# OS junk
+Thumbs.db
+.DS_Store
+Backend/lib64
+

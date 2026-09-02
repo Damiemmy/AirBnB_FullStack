@@ -1,0 +1,52 @@
+version: "3.9"
+  
+services:
+  backend:
+    build: ./AirBnB_Backend
+    container_name: airbnb_backend
+    restart: always
+    entrypoint: ["sh", "/app/entrypoint.sh"]
+    command: gunicorn Airbnb.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./AirBnB_Backend:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    env_file:
+      - ./AirBnB_Backend/.env.production
+    depends_on:
+      - db
+      
+  frontend:
+    build: 
+      context: ./AirBnB_Frontend
+      args:
+        NEXT_PUBLIC_BASE_URL: /api/
+    container_name: airbnb_frontend
+    restart: always
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+    env_file:
+      - ./AirBnB_Backend/.env.production
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    depends_on:
+      - backend
+      - frontend
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
+

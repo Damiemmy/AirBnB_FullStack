@@ -1,0 +1,166 @@
+####################################
+# OS & SYSTEM FILES
+####################################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+####################################
+# EDITORS & IDEs
+####################################
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.bak
+*.tmp
+
+####################################
+# PYTHON
+####################################
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
+.pytest_cache/
+.mypy_cache/
+.pyre/
+.pytype/
+.coverage
+coverage.xml
+htmlcov/
+
+####################################
+# VIRTUAL ENVIRONMENTS
+####################################
+.env
+.env.developement
+.env.production
+.env.*
+venv/
+trash/
+.venv/
+ENV/
+env/
+virtualenv/
+
+####################################
+# DJANGO
+####################################
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+####################################
+# NODE / JAVASCRIPT
+####################################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm
+.eslintcache
+
+####################################
+# FRONTEND BUILD OUTPUTS
+####################################
+dist/
+build/
+.out/
+.next/
+.nuxt/
+.cache/
+
+####################################
+# REACT / NEXT.JS
+####################################
+.next/
+out/
+.vercel/
+.turbo/
+
+####################################
+# TYPESCRIPT
+####################################
+*.tsbuildinfo
+
+####################################
+# DOCKER
+####################################
+*.pid
+docker-compose.override.yml
+
+####################################
+# DATABASES
+####################################
+*.sqlite
+*.db
+*.psql
+*.dump
+
+####################################
+# LOG FILES
+####################################
+logs/
+*.log
+
+####################################
+# TEMP & CACHE
+####################################
+.cache/
+.tmp/
+temp/
+tmp/
+
+####################################
+# SECRETS (VERY IMPORTANT)
+####################################
+*.env
+.env
+.env.local
+.env.production
+.env.development
+.env.test
+secrets.yml
+secrets.json
+*.pem
+*.key
+
+####################################
+# TEST & COVERAGE
+####################################
+.coverage.*
+.tox/
+nosetests.xml
+pytestdebug.log
+
+####################################
+# JUPYTER
+####################################
+.ipynb_checkpoints/
+
+####################################
+# MISC
+####################################
+*.zip
+*.tar
+*.tar.gz
+*.rar
