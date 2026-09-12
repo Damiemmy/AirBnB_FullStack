@@ -8,7 +8,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = bool(os.environ.get("DEBUG", "True"))
 ALLOWED_HOSTS = os.environ.get(
     "ALLOWED_HOSTS",
-    "127.0.0.1 localhost bookreservations.netlify.app"
+    "127.0.0.1 localhost bookreservations.netlify.app",
 ).split(",")
 
 

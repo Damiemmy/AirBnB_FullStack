@@ -5,7 +5,6 @@ services:
     build: ./AirBnB_Backend
     container_name: airbnb_backend
     restart: always
-    entrypoint: ["sh", "/app/entrypoint.sh"]
     command: gunicorn Airbnb.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - ./AirBnB_Backend:/app
@@ -19,9 +18,9 @@ services:
   frontend:
     build: 
       context: ./AirBnB_Frontend
-      args:
-        NEXT_PUBLIC_BASE_URL: /api/
     container_name: airbnb_frontend
+    environment:
+      INTERNAL_API_URL: http://backend:8000
     restart: always
   db:
     image: postgres:16

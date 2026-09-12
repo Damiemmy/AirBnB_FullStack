@@ -3,13 +3,20 @@ import { getAccessToken } from "@/app/lib/action";
 const apiService = {
     
     get: async (url) => {
+        const PUBLIC_API_HOST= process.env.NEXT_PUBLIC_API_HOST || ""
+        console.log("========== API GET ==========");
+        console.log("URL:", `${PUBLIC_API_HOST}${url}`);
+        console.log("Original URL:", url);
+        console.log("=============================");
        
+        
         console.log("get", url);
 
         try {
+            
             const token = await getAccessToken()
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_HOST}${url}`,
+                `${PUBLIC_API_HOST}${url}`,
                 {
                     method: "GET",
                     headers: {
@@ -34,16 +41,19 @@ const apiService = {
     },
 
     post: async (url, data) => {
+
         const token = await getAccessToken()
         console.log("=================================");
         console.log("POST REQUEST TO:", url);
         console.log("TOKEN BEING SENT:", token);
         console.log("=================================");
+        
 
 
         try {
+            const PUBLIC_API_HOST= process.env.NEXT_PUBLIC_API_HOST || ""
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_HOST}${url}`,
+                `${PUBLIC_API_HOST}${url}`,
                 {
                     method: "POST",
                     headers: {
@@ -67,9 +77,10 @@ const apiService = {
     },
     // For unauthenticated requests
     postWithoutToken: async (url, data) => {
+        const PUBLIC_API_HOST= process.env.NEXT_PUBLIC_API_HOST || ""
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_HOST}${url}`,
+                `${PUBLIC_API_HOST}${url}`,
                 {
                     method: "POST",
                     headers: {

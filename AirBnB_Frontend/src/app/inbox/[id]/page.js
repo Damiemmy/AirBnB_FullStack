@@ -5,6 +5,7 @@ import apiService from '@/services/ApiService'
 import { getAccessToken } from '@/app/lib/action'
 
 const page = async({ params }) => {
+  const INTERNAL_API_URL = process.env.INTERNAL_API_URL
   const userId=await getUserId()
   const id=await params
   const conversationId = id.id 
@@ -18,7 +19,7 @@ const page = async({ params }) => {
     }
 
 
-  const conversation=await apiService.get(`/api/chat/${conversationId}/`)
+  const conversation=await apiService.get(`${INTERNAL_API_URL}/api/chat/${conversationId}/`)
   console.log('CHECK_CONVERSATION',conversation)
 
   return (

@@ -6,9 +6,10 @@ import { getUserId } from '@/app/lib/action'
 import Link from 'next/link'
 
 const page = async({params}) => {
+  const INTERNAL_API_URL = process.env.INTERNAL_API_URL
   const id=await params
   const propertiesId = id.id 
-  const property=await apiService.get(`/api/properties/${propertiesId}`)
+  const property=await apiService.get(`${INTERNAL_API_URL || " "}/api/properties/${propertiesId}`)
   const userId=await getUserId()
   console.log("UserId", userId)
   return (

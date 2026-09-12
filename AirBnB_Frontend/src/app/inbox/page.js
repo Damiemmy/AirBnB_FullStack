@@ -3,6 +3,7 @@ import apiService from '@/services/ApiService'
 import { getUserId } from '../lib/action'
 
 const page = async() => {
+  const INTERNAL_API_URL = process.env.INTERNAL_API_URL
   const userId= await getUserId()
   if(!userId){
     return(
@@ -11,7 +12,7 @@ const page = async() => {
         </main>
     )
   }
-    const conversation=await apiService.get('/api/chat/')
+    const conversation=await apiService.get(`${INTERNAL_API_URL || ""}/api/chat/`)
     console.log('RESPONSE..: ', conversation)
     console.log('USERID..: ', userId)
 

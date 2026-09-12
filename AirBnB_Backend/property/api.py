@@ -63,63 +63,195 @@ from useraccount.models import User
 #     })
 
 
+# @api_view(['GET'])
+# def properties_list(request):
+
+#     user = request.user if request.user.is_authenticated else None
+#     favorites = []
+#     properties = Property.objects.all()
+#     ##
+#     is_favorites=request.GET.get('is_favorites','')
+#     landlord_id = request.GET.get('landlord_id', '')
+#     ##
+#     country=request.GET.get('country','')
+#     category=request.GET.get('category','')
+#     checkin_date=request.GET.get('checkIn','')
+#     checkout_date=request.GET.get('checkOut','')
+#     guests=request.GET.get('numGuests','')
+#     bedrooms=request.GET.get('numBedrooms','')
+#     bathrooms=request.GET.get('numBathrooms','')
+#     ##
+#     print ('COUNTRY',country)
+#     ## filter_start
+    
+#     if checkin_date and checkout_date:
+#         exact_matches = Reservation.objects.filter(start_date = checkin_date) | Reservation.objects.filter(end_date=checkout_date)
+#         overlap_matches= Reservation.objects.filter(start_date__lte = checkout_date, end_date__gte=checkin_date)
+#         all_matches=[]
+
+#         for reservation in exact_matches | overlap_matches:
+#             all_matches.append(reservation.property.id)
+#         properties = properties.exclude(id__in = all_matches)
+
+#     if landlord_id:
+#         properties = properties.filter(landlord_id=landlord_id)
+
+#     if is_favorites:
+#         properties=properties.filter(favourited__in=[user])
+#     ##
+#     if guests:
+#         properties=properties.filter(guest__gte=guests)
+#     if bedrooms:
+#         properties=properties.filter(bedroom__gte=bedrooms)
+#     if bathrooms:
+#         properties=properties.filter(bathroom__gte=bathrooms)
+#     if country:
+#         properties=properties.filter(country=country)
+#     if category and category != 'undefined':
+#         properties=properties.filter(categories=category)
+
+    
+#     ## filter end
+
+#     if user:
+#         favorites = list(
+#             Property.objects.filter(favourited=user)
+#             .values_list('id', flat=True)
+#         )
+
+#     serializer = PropertySerializer(properties, many=True)
+
+#     return JsonResponse({
+#         "data": serializer.data,
+#         "favorites": favorites
+#     })
+
+
 @api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
 def properties_list(request):
 
-    user = request.user if request.user.is_authenticated else None
-    favorites = []
-    properties = Property.objects.all()
-    ##
-    is_favorites=request.GET.get('is_favorites','')
-    landlord_id = request.GET.get('landlord_id', '')
-    ##
-    country=request.GET.get('country','')
-    category=request.GET.get('category','')
-    checkin_date=request.GET.get('checkIn','')
-    checkout_date=request.GET.get('checkOut','')
-    guests=request.GET.get('numGuests','')
-    bedrooms=request.GET.get('numBedrooms','')
-    bathrooms=request.GET.get('numBathrooms','')
-    ##
-    print ('COUNTRY',country)
-    ## filter_start
-    
-    if checkin_date and checkout_date:
-        exact_matches = Reservation.objects.filter(start_date = checkin_date) | Reservation.objects.filter(end_date=checkout_date)
-        overlap_matches= Reservation.objects.filter(start_date__lte = checkout_date, end_date__gte=checkin_date)
-        all_matches=[]
+    # Public endpoint — login is NOT required
+    user = None
 
-        for reservation in exact_matches | overlap_matches:
-            all_matches.append(reservation.property.id)
-        properties = properties.exclude(id__in = all_matches)
+    if request.user.is_authenticated:
+        user = request.user
+
+    favorites = []
+
+    properties = Property.objects.all()
+
+    # Filters
+    is_favorites = request.GET.get('is_favorites', '')
+    landlord_id = request.GET.get('landlord_id', '')
+
+    country = request.GET.get('country', '')
+    category = request.GET.get('category', '')
+
+    checkin_date = request.GET.get('checkIn', '')
+    checkout_date = request.GET.get('checkOut', '')
+
+    guests = request.GET.get('numGuests', '')
+    bedrooms = request.GET.get('numBedrooms', '')
+    bathrooms = request.GET.get('numBathrooms', '')
+
+    # --------------------------------
+    # Availability filter
+    # --------------------------------
+
+    if checkin_date and checkout_date:
+
+        overlapping_reservations = Reservation.objects.filter(
+            start_date__lte=checkout_date,
+            end_date__gte=checkin_date
+        )
+
+        reserved_property_ids = overlapping_reservations.values_list(
+            'property_id',
+            flat=True
+        )
+
+        properties = properties.exclude(
+            id__in=reserved_property_ids
+        )
+
+    # --------------------------------
+    # Landlord filter
+    # --------------------------------
 
     if landlord_id:
-        properties = properties.filter(landlord_id=landlord_id)
+        properties = properties.filter(
+            landlord_id=landlord_id
+        )
+
+    # --------------------------------
+    # Favourite filter
+    # --------------------------------
 
     if is_favorites:
-        properties=properties.filter(favourited__in=[user])
-    ##
-    if guests:
-        properties=properties.filter(guest__gte=guests)
-    if bedrooms:
-        properties=properties.filter(bedroom__gte=bedrooms)
-    if bathrooms:
-        properties=properties.filter(bathroom__gte=bathrooms)
-    if country:
-        properties=properties.filter(country=country)
-    if category and category != 'undefined':
-        properties=properties.filter(categories=category)
 
-    
-    ## filter end
+        # Only authenticated users can request their favourites
+        if not user:
+            return JsonResponse(
+                {
+                    "detail": "Authentication required to view favourites."
+                },
+                status=401
+            )
+
+        properties = properties.filter(
+            favourited=user
+        )
+
+    # --------------------------------
+    # Other filters
+    # --------------------------------
+
+    if guests:
+        properties = properties.filter(
+            guest__gte=guests
+        )
+
+    if bedrooms:
+        properties = properties.filter(
+            bedroom__gte=bedrooms
+        )
+
+    if bathrooms:
+        properties = properties.filter(
+            bathroom__gte=bathrooms
+        )
+
+    if country:
+        properties = properties.filter(
+            country=country
+        )
+
+    if category and category != 'undefined':
+        properties = properties.filter(
+            categories=category
+        )
+
+    # --------------------------------
+    # Get user's favourites
+    # --------------------------------
 
     if user:
         favorites = list(
-            Property.objects.filter(favourited=user)
-            .values_list('id', flat=True)
+            Property.objects.filter(
+                favourited=user
+            ).values_list('id', flat=True)
         )
 
-    serializer = PropertySerializer(properties, many=True)
+    # --------------------------------
+    # Serialize
+    # --------------------------------
+
+    serializer = PropertySerializer(
+        properties,
+        many=True
+    )
 
     return JsonResponse({
         "data": serializer.data,

@@ -20,7 +20,7 @@ const PropertyListItem = ({property,markFavorite,loadingFavorite}) => {
                     property.image_url
                         ? property.image_url.startsWith('http')
                             ? property.image_url
-                            : `${process.env.NEXT_PUBLIC_API_HOST}${property.image_url}`
+                            : `${process.env.NEXT_PUBLIC_API_HOST || " "}${property.image_url}`
                         : '/images/house1.avif'
                 }
                 alt='home image'

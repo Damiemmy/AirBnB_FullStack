@@ -6,10 +6,11 @@ import { getUserId } from '@/app/lib/action'
 import apiService from '@/services/ApiService'
 
 const page = async({params}) => {
+    const INTERNAL_API_URL = process.env.INTERNAL_API_URL
     const id=await params
     const landlordId=id.id
     console.log('PARAMS',landlordId)
-    const landlord = await apiService.get(`/api/auth/${landlordId}`)
+    const landlord = await apiService.get(`${INTERNAL_API_URL}/api/auth/${landlordId}`)
     const userId=getUserId()
    
     return(

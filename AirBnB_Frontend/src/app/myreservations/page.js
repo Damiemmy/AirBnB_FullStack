@@ -5,7 +5,8 @@ import Link from 'next/link'
 
 
 const page = async() => {
-    const reservation= await apiService.get('/api/auth/myreservation/')
+    const INTERNAL_API_URL = process.env.INTERNAL_API_URL
+    const reservation= await apiService.get(`${INTERNAL_API_URL || ""}/api/auth/myreservation/`)
     console.log(reservation.data)
     
   return (
